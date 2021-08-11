@@ -34,7 +34,7 @@ func StartRouter(options RouterSettings) {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost/"},
 		AllowCredentials: true,
 	}))
 
