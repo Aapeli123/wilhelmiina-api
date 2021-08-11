@@ -1,0 +1,57 @@
+version: "3.9"
+services:
+    redis:
+        image: redis:alpine
+        ports:
+            - "6379:6379"
+        networks:
+            - api
+        volumes: 
+            - redis_data:/data
+    postgres:
+        image: postgres:10.5
+        restart: always
+        environment:
+            - POSTGRES_USER=admin
+            - POSTGRES_PASSWORD=secret
+            - POSTGRES_DB=test
+            - DATABASE_HOST=api 
+        ports:
+            - '5432:5432'
+        networks:
+            - api
+        volumes: 
+            - postgres_data:/var/lib/postgresql/data/
+    web: 
+        build: .
+        ports: 
+            - "8080:8080"
+        links: 
+            - redis
+            - postgres
+        depends_on: 
+            - postgres
+        networks:
+            - api
+    pgadmin:
+        image: dpage/pgadmin4
+        environment: 
+            PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+            PGADMIN_DEFAULT_PASSWORD: "admin"
+        depends_on: 
+            - postgres
+        ports: 
+            - "5050:80"
+        networks: 
+            - api
+    nginx:
+        image: nginx
+        ports: 
+            - "80:8080"
+networks:
+    api:
+        driver: bridge
+
+volumes: 
+    postgres_data:
+    redis_data:
