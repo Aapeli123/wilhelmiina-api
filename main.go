@@ -41,7 +41,7 @@ func main() {
 		fmt.Println("Creating default admin user with credentials:")
 		fmt.Println("Username: admin")
 		fmt.Println("Password: admin")
-
+		wilhelmiina.CreateUser("admin", "Admin", "Admin", "admin", wilhelmiina.Admin, db)
 	}
 	StartRouter(RouterSettings{
 		HTTPS:   false,

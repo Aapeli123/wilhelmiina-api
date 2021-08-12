@@ -44,10 +44,6 @@ services:
             - "5050:80"
         networks: 
             - api
-    nginx:
-        image: nginx
-        ports: 
-            - "80:8080"
 networks:
     api:
         driver: bridge

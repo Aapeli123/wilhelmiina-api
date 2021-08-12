@@ -34,8 +34,9 @@ func StartRouter(options RouterSettings) {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost/", "http://localhost"},
+		AllowedOrigins:   []string{"http://localhost:3000", "http://localhost"},
 		AllowCredentials: true,
+		AllowedMethods:   []string{"POST", "GET", "DELETE", "PATCH", "OPTIONS"},
 	}))
 
 	api := router.Group("/api")
