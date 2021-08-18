@@ -14,18 +14,18 @@ type sidRequired struct {
 func getUserFromSessionID(c *gin.Context) {
 	sid, err := c.Cookie("session")
 	if err != nil {
-		c.AbortWithStatusJSON(403, sidRequired{
+		c.AbortWithStatusJSON(403, DefaultResp{
 			Success: false,
-			Err:     "SessionID not found. You should probably login again...",
+			Error:   "SessionID not found. You should probably login again...",
 		})
 		return
 	}
 
 	uuid, err := rdb.Get(rdbCtx, sid).Result()
 	if err != nil {
-		c.AbortWithStatusJSON(403, sidRequired{
+		c.AbortWithStatusJSON(403, DefaultResp{
 			Success: false,
-			Err:     "SessionID not found. You should probably login again...",
+			Error:   "SessionID not found. You should probably login again...",
 		})
 		return
 	}
