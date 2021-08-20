@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/Aapeli123/wilhelmiina-student-manager"
 	"github.com/go-redis/redis/v8"
@@ -15,11 +16,26 @@ var rdb *redis.Client
 var rdbCtx = context.Background()
 
 func main() {
+
+	redisPort := os.Getenv("REDIS_PORT")
+	redisPassword := os.Getenv("REDIS_PASSWORD")
+
+	postgresPort := os.Getenv("POSTGRES_PORT")
+	postgresUser := os.Getenv("POSTGRES_USERNAME")
+	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
+	postgresDatabase := os.Getenv("POSTGRES_DATABASE")
+
+	apiPort := os.Getenv("API_PORT")
+	environment := os.Getenv("ENVIRONMENT")
+
 	var err error
 	rdb = redis.NewClient(&redis.Options{
-		Addr: "redis:6379",
+		Addr:     "redis:" + redisPort,
+		Password: redisPassword,
 	})
-	dbstr := "host=postgres port=5432 user=admin password=secret dbname=test sslmode=disable"
+	dbstr := fmt.Sprintf("host=postgres port=%s user=%s password=%s dbname=%s sslmode=disable",
+		postgresPort, postgresUser, postgresPassword, postgresDatabase,
+	)
 	db, err = gorm.Open(postgres.Open(dbstr))
 	if err != nil {
 		fmt.Println(dbstr)
@@ -43,9 +59,10 @@ func main() {
 		fmt.Println("Password: admin")
 		wilhelmiina.CreateUser("admin", "Admin", "Admin", "admin", wilhelmiina.Admin, db)
 	}
+	debug := environment == "test"
 	StartRouter(RouterSettings{
 		HTTPS:   false,
-		Address: ":8080",
-		Debug:   true,
+		Address: ":" + apiPort,
+		Debug:   debug,
 	})
 }
